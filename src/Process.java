@@ -6,7 +6,6 @@ public class Process {
 	Random rand = new Random();
 	private ArrayList<Threads> threads;
 
-	private int quant = 10;
 	private String description = "Процесс ";
 	private int maxTime;
 	private int resultTime = 0;
@@ -27,7 +26,9 @@ public class Process {
 	public boolean isEmpty() {
 		return threads.size() > 0 ? false : true;
 	}
-
+	public void setResultTime() {
+		this.resultTime++;
+	}
 	public int getResultTime() {
 		return resultTime;
 	}
@@ -44,50 +45,15 @@ public class Process {
 		return getMaxTime()>getResultTime()?true:false;
 	}
 	
-	public void makeProcess() {
-		if ((quant < 1)) {
-			System.out.println("Выделенный квант времени меньше 1");
-			System.exit(0);
-		}
-		System.out.println();
-		System.out.println(getDescription() + "  Время макс: " + maxTime);
-		int sizeThreads = threads.size();
-		for (int i = 0, iq = 0; i < sizeThreads; i++, iq++) {
-			Threads thread = threads.get(i);
-			int thQuant = quant / threads.size();
-			if (iq < quant % threads.size()) {
-				thQuant++;
-			}
-			if (!thread.needTime()) {
-				System.out.println(thread.getDescription() + " завершен");
-				threads.remove(i);
-				sizeThreads = threads.size();
-				i--;
-				break;
-			}
-			while (thQuant > 0) {
-				if (thread.needTime() & isHaveTime() & thQuant > 0) {
-					thread.makeThread();
-					thQuant--;
-					resultTime++;
-				}
-				if (!thread.needTime()) {
-					System.out.println(thread.getDescription() + " завершен");
-					threads.remove(i);
-					sizeThreads = threads.size();
-					i--;
-					break;
-				}
-				if (!isHaveTime()) {
-					System.out.println("Максимальное время " + getDescription() + " истекло");
-					return;
-				}
-				if (thQuant <= 0) {
-					System.out.println("Квант на " + thread.getDescription() + " истек");
-					break;
-				}				
-			}
-		}
-		System.out.println();
+	public Threads Lists(int index) {
+		return threads.get(index);
 	}
+	
+	public int Amount() {
+		return threads.size();
+	}
+	
+	public void procKiller(int index) {
+		threads.remove(index);
+	}	
 }
