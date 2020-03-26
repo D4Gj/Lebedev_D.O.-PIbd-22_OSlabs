@@ -2,7 +2,7 @@ public class Threads {
 	private String description = "Поток ";
 	private int maxTime;
 	private int currentTime = 0;
-	//private int quantTime = 0;
+	
 
 	public Threads(String description, int maxTime) {
 		this.description += description;
@@ -32,7 +32,7 @@ public class Threads {
 	}
 
 	public String getInfo() {
-		return description + /*" quantTime=" + quantTime +*/ " maxTime:"
+		return description + " maxTime:"
 				+ maxTime + " currentTime:" + currentTime;
 	}
 }
