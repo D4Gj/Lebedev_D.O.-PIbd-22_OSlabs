@@ -43,9 +43,7 @@ public class Process {
 		return getMaxTime()>getResultTime()?true:false;
 	}
 
-
 	public void makeProcess(int quant) {
-
 		if ((quant < 1)) {
 			System.out.println("Выделенный квант времени меньше 1");
 			System.exit(0);
