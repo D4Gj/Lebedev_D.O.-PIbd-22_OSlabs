@@ -4,7 +4,6 @@ import java.util.Random;
 public class Process {
 
 	Random rand = new Random();
-
 	private ArrayList<Threads> threads;
 
 	private String description = "Процесс ";
@@ -44,21 +43,21 @@ public class Process {
 		return getMaxTime()>getResultTime()?true:false;
 	}
 
+
 	public void makeProcess(int quant) {
 
-		if (!(quant > 0)) {
+		if ((quant < 1)) {
 			System.out.println("Выделенный квант времени меньше 1");
 			System.exit(0);
 		}
 		System.out.println();
 		System.out.println(getDescription() + "  Время макс: " + maxTime);
 		int sizeThreads = threads.size();
-		int QsizeThreads = threads.size();
 		int quant2 = quant;
 		for (int i = 0, iq = 0; i < sizeThreads; i++, iq++) {
 			Threads thread = threads.get(i);
-			int thQuant = quant / QsizeThreads;
-			if (iq < quant % QsizeThreads) {
+			int thQuant = quant / threads.size();
+			if (iq < quant % threads.size()) {
 				thQuant++;
 			}
 			if (!thread.needTime()) {
