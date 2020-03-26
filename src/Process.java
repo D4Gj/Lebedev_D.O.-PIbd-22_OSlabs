@@ -51,7 +51,6 @@ public class Process {
 		System.out.println();
 		System.out.println(getDescription() + "  Время макс: " + maxTime);
 		int sizeThreads = threads.size();
-		int quant2 = quant;
 		for (int i = 0, iq = 0; i < sizeThreads; i++, iq++) {
 			Threads thread = threads.get(i);
 			int thQuant = quant / threads.size();
@@ -66,11 +65,10 @@ public class Process {
 				break;
 			}
 			while (thQuant > 0) {
-				if (thread.needTime() & isHaveTime() & quant2 > 0 & thQuant > 0) {
+				if (thread.needTime() & isHaveTime() & thQuant > 0) {
 					thread.makeThread();
 					thQuant--;
 					resultTime++;
-					quant2--;
 				}
 				if (!thread.needTime()) {
 					System.out.println(thread.getDescription() + " завершен");
@@ -86,11 +84,7 @@ public class Process {
 				if (thQuant <= 0) {
 					System.out.println("Квант на " + thread.getDescription() + " истек");
 					break;
-				}
-				if (quant2 <= 0) {
-					System.out.println("---------------");
-					return;
-				}
+				}				
 			}
 		}
 		System.out.println();
