@@ -4,7 +4,6 @@ import java.util.Random;
 public class Planner {
 	private  ArrayList<Process> myProcesses = new ArrayList<Process>();
 	private Random rand = new Random();
-	private int quant = 10;
 	
 	public void create() {
 		for (int i = 0; i < rand.nextInt(5) + 1; i++) {
@@ -18,17 +17,13 @@ public class Planner {
 		}
 		System.out.println();
 	}
-	public void start() {
-		if (quant < 1) {
-			System.out.println("Квант времени меньше 1");
-			return;
-		}
+	public void start() {		
 		while (!myProcesses.isEmpty()) {
 			int sizeProcesses = myProcesses.size();
 			for (int i = 0; i < sizeProcesses; i++) {
 				if (myProcesses.get(i).isHaveTime()) {
 					if (!myProcesses.get(i).isEmpty()) {
-						myProcesses.get(i).makeProcess(quant);
+						myProcesses.get(i).makeProcess();
 					} else {
 						System.out.println("Все потоки "
 								+ myProcesses.get(i).getDescription()

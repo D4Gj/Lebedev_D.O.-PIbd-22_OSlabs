@@ -6,6 +6,7 @@ public class Process {
 	Random rand = new Random();
 	private ArrayList<Threads> threads;
 
+	private int quant = 10;
 	private String description = "Процесс ";
 	private int maxTime;
 	private int resultTime = 0;
@@ -42,8 +43,8 @@ public class Process {
 	public boolean isHaveTime() {
 		return getMaxTime()>getResultTime()?true:false;
 	}
-
-	public void makeProcess(int quant) {
+	
+	public void makeProcess() {
 		if ((quant < 1)) {
 			System.out.println("Выделенный квант времени меньше 1");
 			System.exit(0);
