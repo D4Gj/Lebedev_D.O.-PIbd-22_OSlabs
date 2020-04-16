@@ -1,86 +1,99 @@
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Planner {
-	private  ArrayList<Process> myProcesses = new ArrayList<Process>();
-	private Random rand = new Random();
-	private int quant = 10;
-	
-	public void create() {
-		for (int i = 0; i < rand.nextInt(5) + 1; i++) {
-			myProcesses.add(new Process("" + i, rand.nextInt(50) + 1));
-		}
-	}
-	public void info() {
-		for (int i = 0; i < myProcesses.size(); i++) {
-			System.out.println(myProcesses.get(i).getDescription()
-					+ " Потоков: " + myProcesses.get(i).getCountOfThreads());
-		}
-		System.out.println();
-	}
-	public void start() {		
-		while (!myProcesses.isEmpty()) {
-			int sizeProcesses = myProcesses.size();
-			for (int i = 0; i < sizeProcesses; i++) {
-				if (myProcesses.get(i).isHaveTime()) {
-					if (!myProcesses.get(i).isEmpty()) {
-						Execute(i);
+	private static Map<Integer, Integer> tablePages = new HashMap<Integer, Integer>();
+	PhysicalMemory phis = new PhysicalMemory();
+	VirtualMemory vir = new VirtualMemory();
+	Page[] massiv=phis.getPhisMem();
+	ArrayList<Page> v=vir.getVirMem();
+
+	public Page Request(int idVir, int base, int lim) {
+		if (base <= idVir & idVir < base + lim) {
+			if (tablePages.containsKey(idVir)) {
+				grow(tablePages.get(idVir));
+				return phis.getPhisPage(tablePages.get(idVir));
+			} else {
+				int freePlace = findFree();
+				if (freePlace != -1) {
+					if (phis.setPhisPage(vir.getPage(idVir), findFree())) {
+						tablePages.put(idVir, freePlace);
+						grow(tablePages.get(idVir));
+						return phis.getPhisPage(tablePages.get(idVir));
 					} else {
-						System.out.println("Все потоки "
-								+ myProcesses.get(i).getDescription()
-								+ "  выполнены");
-						myProcesses.remove(i);
-						sizeProcesses = myProcesses.size();
-						i--;
+						System.out.println("Displaying error");
+						return null;
 					}
 				} else {
-					myProcesses.remove(i);
-					sizeProcesses = myProcesses.size();
-					i--;
+					int idPhis = choosePage();
+					findKey(idPhis);
+					if (phis.setPhisPage(vir.getPage(idVir), idPhis)) {
+
+						tablePages.put(idVir, idPhis);
+						grow(tablePages.get(idVir));
+						return phis.getPhisPage(tablePages.get(idVir));
+					} else {
+						System.out.println("Displaying error");
+						return null;
+					}
 				}
 			}
+		} else {
+			System.out.println("Access error");
+			return null;
 		}
-		System.out.println("Все процессы выполнены");
 	}
-	public void Execute(int index) {
-		if(quant<1) {
-			System.out.println("Выделенный квант времени меньше 1");
-			System.exit(0);
-		}
-		int sizeThreads =  myProcesses.get(index).Amount();
-		for (int i = 0, iq = 0; i < myProcesses.get(index).Amount(); i++, iq++) {
-			Threads thread = myProcesses.get(index).Lists(i);
-			int thQuant = quant / myProcesses.get(index).Amount();
-			if (iq < quant % myProcesses.get(index).Amount()) {
-				thQuant++;
-			}
-			if (!thread.needTime()) {
-				System.out.println(thread.getDescription() + " завершен");
-				myProcesses.get(index).procKiller(i);				
-				i--;
-				break;
-			}
-			while (thQuant > 0) {
-				if (thread.needTime() & myProcesses.get(index).isHaveTime() & thQuant > 0) {
-					thread.makeThread();
-					thQuant--;
-					myProcesses.get(index).setResultTime();
-				}
-				if (!thread.needTime()) {
-					System.out.println(thread.getDescription() + " завершен");
-					myProcesses.get(index).procKiller(i);						
-					i--;
-					break;
-				}
-				if (!myProcesses.get(index).isHaveTime()) {
-					System.out.println("Максимальное время " + myProcesses.get(index).getDescription() + " истекло");
-					return;
-				}
-				if (thQuant <= 0) {
-					System.out.println("Квант на " + thread.getDescription() + " истек");
-					break;
-				}				
+
+	public void findKey(int idPhis) {
+		for (Integer vals : tablePages.values()) {
+			if (vals.equals(idPhis)) {
+			
+				tablePages.remove(vals);
+				
+				return;
 			}
 		}
+	}
+
+	private int findFree() {
+		Page[] pages = phis.getPhisMem();
+		for (int i = 0; i < phis.getSize(); i++) {
+			if (pages[i] == null) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	private void grow(int idVir) {
+		for (int i = 0; i < phis.getSize(); i++) {
+			Page res=phis.getPhisPage(i);
+			if (res != null) {
+				if (i == idVir) {
+					res.use();
+				} else {
+					res.grow();
+				}
+				System.out.print(" ");
+			}
+		}
+	}
+
+	private int choosePage() {
+		Page[] pages = phis.getPhisMem();
+		int res = 0;
+		int maxAge = pages[res].getAge();
+		for (int i = 1; i < phis.getSize(); i++) {
+			if (pages[i].getAge() > maxAge) {
+				res = i;
+				maxAge = pages[i].getAge();
+			}
+		}
+		Page p=phis.getPhisPage(res);
+		System.out.println();
+		System.out.println("Unloaded page "+p.getData());
+		
+		return res;
 	}
 }

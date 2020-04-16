@@ -2,58 +2,49 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Process {
-
 	Random rand = new Random();
-	private ArrayList<Threads> threads;
-
-	private String description = "Процесс ";
+	private int base;
+	private int lim;
 	private int maxTime;
-	private int resultTime = 0;
+	private int resultTime;
+	private String descr="proc";
+	VirtualMemory virMem = new VirtualMemory();
+	Planner planner = new Planner();
 
-	public Process(String description, int maxTime) {
-		this.description += description;
-		this.maxTime = maxTime;
-		threads = new ArrayList<Threads>();
-		for (int i = 0; i < rand.nextInt(5) + 1; i++) {
-			threads.add(new Threads("" + i, rand.nextInt(10) + 1));
+	public Process(ArrayList<String> mas,int index) {
+		this.base = virMem.getSizeVirt();
+		this.lim = mas.size();
+		descr+=index+" ";
+		maxTime = lim;
+		for (int i = 0; i < lim; i++) {
+			virMem.setPage(new Page("proc"+index+"page"+i));
 		}
 	}
-
-	public int getCountOfThreads() {
-		return threads.size();
+	public int getBase() {
+		return base;
 	}
 
-	public boolean isEmpty() {
-		return threads.size() > 0 ? false : true;
-	}
-	public void setResultTime() {
-		this.resultTime++;
-	}
-	public int getResultTime() {
-		return resultTime;
+	public int getLim() {
+		return lim;
 	}
 
-	public int getMaxTime() {
-		return maxTime;
+	public boolean isNeedTime() {
+		return maxTime > resultTime;
 	}
 
-	public String getDescription() {
-		return description;
+	public void makeProcess(int quant) {
+		System.out.print(descr+maxTime+": ");
+		while (isNeedTime()) {
+			if(quant<0) {
+				System.out.println();
+				return;
+			}
+			Page res=planner.Request(base+rand.nextInt(lim), base, lim);
+			System.out.print(res.getData());
+			resultTime++;
+			quant--;
+		}
+		System.out.println();
 	}
 
-	public boolean isHaveTime() {
-		return getMaxTime()>getResultTime()?true:false;
-	}
-	
-	public Threads Lists(int index) {
-		return threads.get(index);
-	}
-	
-	public int Amount() {
-		return threads.size();
-	}
-	
-	public void procKiller(int index) {
-		threads.remove(index);
-	}	
 }
