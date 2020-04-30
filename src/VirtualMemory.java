@@ -10,18 +10,18 @@ public class VirtualMemory {
 			return virtualMemory.get(i);
 		}
 		return null;
-		
+
 	}
-	
+
 	public ArrayList<Page> getVirMem() {
 		return virtualMemory;
 	}
-	
+
 	public int setPage(Page p){
 		virtualMemory.add(p);
 		return virtualMemory.indexOf(p);
 	}
-	
+
 	public int getSizeVirt(){
 		return  virtualMemory.size();
 	}

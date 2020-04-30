@@ -9,8 +9,8 @@ public class Planner {
 	Page[] massiv=phis.getPhisMem();
 	ArrayList<Page> v=vir.getVirMem();
 
-	public Page Request(int idVir, int base, int lim) {
-		if (base <= idVir & idVir < base + lim) {
+	public Page Request(int idVir) {
+		if (vir.getPage(idVir).getAge() <= idVir & idVir < vir.getPage(idVir).getAge() + v.size()) {
 			if (tablePages.containsKey(idVir)) {
 				grow(tablePages.get(idVir));
 				return phis.getPhisPage(tablePages.get(idVir));
@@ -48,9 +48,9 @@ public class Planner {
 	public void findKey(int idPhis) {
 		for (Integer vals : tablePages.values()) {
 			if (vals.equals(idPhis)) {
-			
+
 				tablePages.remove(vals);
-				
+
 				return;
 			}
 		}
@@ -93,7 +93,7 @@ public class Planner {
 		Page p=phis.getPhisPage(res);
 		System.out.println();
 		System.out.println("Unloaded page "+p.getData());
-		
+
 		return res;
 	}
 }
