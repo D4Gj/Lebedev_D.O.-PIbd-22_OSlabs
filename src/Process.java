@@ -4,30 +4,26 @@ import java.util.Random;
 public class Process {
 	Random rand = new Random();
 	private int base;
-	private int lim;
+	ArrayList<String> mas;
 	private int maxTime;
 	private int resultTime;
+	int id;
 	private String descr="proc";
 	VirtualMemory virMem = new VirtualMemory();
 	Planner planner = new Planner();
 
 	public Process(ArrayList<String> mas,int index) {
-		this.base = virMem.getSizeVirt();
-		this.lim = mas.size();
-		descr+=index+" ";
-		maxTime = lim;
-		for (int i = 0; i < lim; i++) {
-			virMem.setPage(new Page("proc"+index+"page"+i));
+		base = virMem.getSizeVirt();
+		this.mas=mas;
+		descr+=index+" ";	
+		id=index;
+		maxTime = mas.size();
+		for (int i = 0; i < mas.size(); i++) {
+			this.virMem.setPage(new Page("proc"+index+"page"+i));
 		}
 	}
-	public int getBase() {
-		return base;
-	}
 
-	public int getLim() {
-		return lim;
-	}
-
+	
 	public boolean isNeedTime() {
 		return maxTime > resultTime;
 	}
@@ -39,7 +35,7 @@ public class Process {
 				System.out.println();
 				return;
 			}
-			Page res=planner.Request(base+rand.nextInt(lim), base, lim);
+			Page res=planner.Request(base+rand.nextInt(mas.size()),base,mas.size());
 			System.out.print(res.getData());
 			resultTime++;
 			quant--;

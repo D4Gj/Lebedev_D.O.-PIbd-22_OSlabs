@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class VirtualMemory {
 
-	private static ArrayList<Page> virtualMemory = new ArrayList<Page>();
+	public static ArrayList<Page> virtualMemory = new ArrayList<Page>();
 
 	public Page getPage(int i) {
 		if (i>=0 &i < virtualMemory.size()) {
