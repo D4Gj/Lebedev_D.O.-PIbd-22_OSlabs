@@ -1,30 +1,27 @@
 public class Knot {
 	
-	private File file;
-	private HelperDraw[] helperDraws;
-	private String filename;
-	private int filesize;
+	private int knotId;
+	private int fileId;
+	private Knot knot;
 	
-	public Knot(File file, HelperDraw[] points){
-		this.file = file;
-		this.helperDraws = points;
-		filename = file.getName();
-		filesize = file.fileSize();
+	public Knot(int fileId,int knotId){
+		this.fileId = fileId;
+		this.knotId = knotId;
 	}
 	
-	public HelperDraw[] getPoints(){
-		return helperDraws;
+	public void setKnot(int fileId,int knotId) {
+		knot = new Knot(fileId,knotId);
 	}
 	
-	public File getFile(){
-		return file;
+	public void setFile(int fileId) {
+		this.fileId=fileId;
 	}
 	
-	public String getName(){
-		return filename;
+	public Knot nextKnot() {
+		return knot;
 	}
 	
-	public int fileSize(){
-		return filesize;
-	}
+	public int getFileId() {
+		return fileId;
+	}	
 }
